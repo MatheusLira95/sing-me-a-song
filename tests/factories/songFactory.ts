@@ -1,6 +1,6 @@
 import connection from "../../src/database";
 
-async function createSong() {
+export async function createSong() {
   const song: { name: string; youtubeLink: string; score: number } = {
     name: "That's Life - Frank Sinatra",
     youtubeLink: "https://www.youtube.com/watch?v=TnlPtaPxXfc",
@@ -9,14 +9,14 @@ async function createSong() {
   return song;
 }
 
-async function createEmptyNameSong() {
+export async function createEmptyNameSong() {
   const song = {
     name: "",
     youtubeLink: "abc",
   };
   return song;
 }
-async function createEmptyYoutubeLink() {
+export async function createEmptyYoutubeLink() {
   const song = {
     name: "abc",
     youtubeLink: "",
@@ -24,4 +24,14 @@ async function createEmptyYoutubeLink() {
   return song;
 }
 
-export { createSong, createEmptyNameSong, createEmptyYoutubeLink };
+export async function getSongById(
+  id: number
+): Promise<{ id: number; name: string; youtubeLink: string; score: number }> {
+  const result = await connection.query(
+    `
+    SELECT * FROM songs WHERE id = $1
+  `,
+    [id]
+  );
+  return result.rows[0];
+}

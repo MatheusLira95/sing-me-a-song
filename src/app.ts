@@ -10,4 +10,7 @@ app.get("/test", (req, res) => {
   res.send("OK!");
 });
 app.post("/recommendations", songController.create);
+
+app.post("/recommendations/:id/upvote", songController.upVote);
+
 export default app;
