@@ -6,11 +6,14 @@ import app from "../../src/app";
 import {
   createEmptyNameSong,
   createEmptyYoutubeLink,
+  createLowRatedSong,
   createSong,
+  createTopRatedSong,
 } from "../factories/songFactory";
 import {
   clearDatabase,
   getSongById,
+  insertSong,
   scoreMinusFive,
 } from "../utils/databaseUtils";
 import connection from "../../src/database";
@@ -142,7 +145,7 @@ describe("GET /recommendations/random", () => {
   });
   it("should return 200 if there is a song registered and right response format", async () => {
     const song = await createSong();
-    const response = await supertest(app).post("/recommendations").send(song);
+    await supertest(app).post("/recommendations").send(song);
     const expected = {
       id: 1,
       name: song.name,
@@ -153,5 +156,31 @@ describe("GET /recommendations/random", () => {
     const result = await supertest(app).get("/recommendations/random");
     expect(result.status).toEqual(200);
     expect(expected).toEqual(result.body);
+  });
+});
+
+describe("GET /recommendations/top/:amount", () => {
+  it("should return 404 if there is no musics registered", async () => {
+    const response = await supertest(app).get(`/recommendations/top/${1}`);
+    expect(response.status).toEqual(404);
+  });
+  it("should return 200 if there is two songs registered with differents score, order descendant", async () => {
+    const bigScore = await createTopRatedSong();
+    const lowScore = await createLowRatedSong();
+    await insertSong(bigScore);
+    await insertSong(lowScore);
+
+    const expected = [
+      {
+        id: 1,
+        name: bigScore.name,
+        youtubeLink: bigScore.youtubeLink,
+        score: bigScore.score,
+      },
+    ];
+
+    const response = await supertest(app).get(`/recommendations/top/${1}`);
+    //expect(response.status).toEqual(200);
+    expect(expected).toEqual(response.body);
   });
 });

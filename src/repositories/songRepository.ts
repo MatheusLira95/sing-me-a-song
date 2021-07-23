@@ -65,3 +65,16 @@ export async function getLowRated() {
   `);
   return result.rows[0];
 }
+
+export async function getAmount(amount: number) {
+  const result = await connection.query(
+    `
+    SELECT * FROM songs ORDER BY score DESC LIMIT $1;
+  `,
+    [amount]
+  );
+  if (result.rows.length === 0) {
+    return null;
+  }
+  return result.rows;
+}

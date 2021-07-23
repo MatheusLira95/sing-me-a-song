@@ -30,3 +30,16 @@ export async function scoreMinusFive(id: number) {
   );
   return result.rows[0];
 }
+
+export async function insertSong(song: {
+  name: string;
+  youtubeLink: string;
+  score: number;
+}) {
+  await connection.query(
+    `
+    INSERT INTO songs ("name", "youtubeLink", "score") VALUES ($1, $2, $3);
+  `,
+    [song.name, song.youtubeLink, song.score]
+  );
+}

@@ -2,6 +2,7 @@ import { Response, Request } from "express";
 import { getSong, validateYouTubeUrl } from "../services/songServices";
 import * as songRepository from "../repositories/songRepository";
 import connection from "../database";
+import { resolveSoa } from "dns";
 
 export async function create(req: Request, res: Response) {
   try {
@@ -73,6 +74,25 @@ export async function getRecommendation(req: Request, res: Response) {
     } else {
       res.status(200).send(result);
     }
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+}
+
+export async function getByAmount(req: Request, res: Response) {
+  try {
+    const amount = parseInt(req.params.amount);
+    console.log(amount);
+
+    const result = await songRepository.getAmount(amount);
+    console.log(result);
+
+    if (result === null) {
+      return res.sendStatus(404);
+    }
+
+    res.status(200).send(result);
   } catch (err) {
     console.log(err);
     res.sendStatus(500);
