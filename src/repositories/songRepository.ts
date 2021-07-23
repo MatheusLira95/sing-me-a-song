@@ -9,6 +9,15 @@ export async function create(name: string, youtubeLink: string, score: number) {
   );
 }
 
+export async function getById(id: number) {
+  const result = await connection.query(
+    ` SELECT * FROM songs WHERE id = $1
+    `,
+    [id]
+  );
+  return result.rows.length;
+}
+
 export async function plusOneVote(id: number) {
   const result = await connection.query(
     `
@@ -21,11 +30,24 @@ export async function plusOneVote(id: number) {
   return result.rows[0];
 }
 
-export async function getById(id: number) {
+export async function lessOneVote(id: number) {
   const result = await connection.query(
-    ` SELECT * FROM songs WHERE id = $1
+    `
+      UPDATE songs 
+      SET score = score - 1
+      WHERE id = $1
+      RETURNING *;
     `,
     [id]
   );
-  return result.rows.length;
+  return result.rows[0];
+}
+
+export async function deleteSong(id: number) {
+  const result = await connection.query(
+    `
+    DELETE FROM songs WHERE id = $1
+    `,
+    [id]
+  );
 }

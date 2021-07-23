@@ -35,3 +35,16 @@ export async function getSongById(
   );
   return result.rows[0];
 }
+
+export async function scoreMinusFive(id: number) {
+  const result = await connection.query(
+    `
+      UPDATE songs 
+      SET score = -5
+      WHERE id = $1
+      RETURNING *;
+    `,
+    [id]
+  );
+  return result.rows[0];
+}

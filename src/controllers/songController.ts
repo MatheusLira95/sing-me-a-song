@@ -39,3 +39,25 @@ export async function upVote(req: Request, res: Response) {
     res.sendStatus(500);
   }
 }
+
+export async function downVote(req: Request, res: Response) {
+  try {
+    const id = parseInt(req.params.id);
+
+    const notExistingSong = await songRepository.getById(id);
+    if (notExistingSong === 0) {
+      return res.sendStatus(409);
+    }
+
+    const result = await songRepository.lessOneVote(id);
+
+    if (result.score < -5) {
+      await songRepository.deleteSong(id);
+    }
+
+    res.sendStatus(200);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+}
