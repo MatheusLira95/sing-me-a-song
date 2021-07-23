@@ -1,3 +1,5 @@
+import * as songRepository from "../repositories/songRepository";
+
 export function validateYouTubeUrl(url: string) {
   if (url) {
     var regExp =
@@ -7,4 +9,19 @@ export function validateYouTubeUrl(url: string) {
     }
   }
   return false;
+}
+
+export async function getSong(ramdom: number) {
+  let result;
+
+  if (ramdom <= 0.7) {
+    result = await songRepository.getTopRated();
+  }
+  if (!result) {
+    result = await songRepository.getLowRated();
+  }
+  if (!result) {
+    return undefined;
+  }
+  return result;
 }

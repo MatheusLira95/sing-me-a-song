@@ -51,3 +51,17 @@ export async function deleteSong(id: number) {
     [id]
   );
 }
+
+export async function getTopRated() {
+  const result = await connection.query(`
+    SELECT * FROM songs WHERE score > 10 LIMIT 1;
+  `);
+  return result.rows[0];
+}
+
+export async function getLowRated() {
+  const result = await connection.query(`
+    SELECT * FROM songs WHERE score <= 10 LIMIT 1;
+  `);
+  return result.rows[0];
+}

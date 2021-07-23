@@ -24,27 +24,20 @@ export async function createEmptyYoutubeLink() {
   return song;
 }
 
-export async function getSongById(
-  id: number
-): Promise<{ id: number; name: string; youtubeLink: string; score: number }> {
-  const result = await connection.query(
-    `
-    SELECT * FROM songs WHERE id = $1
-  `,
-    [id]
-  );
-  return result.rows[0];
+export async function createTopRatedSong() {
+  const song: { name: string; youtubeLink: string; score: number } = {
+    name: "That's Life - Frank Sinatra",
+    youtubeLink: "https://www.youtube.com/watch?v=TnlPtaPxXfc",
+    score: 11,
+  };
+  return song;
 }
 
-export async function scoreMinusFive(id: number) {
-  const result = await connection.query(
-    `
-      UPDATE songs 
-      SET score = -5
-      WHERE id = $1
-      RETURNING *;
-    `,
-    [id]
-  );
-  return result.rows[0];
+export async function createLowRatedSong() {
+  const song: { name: string; youtubeLink: string; score: number } = {
+    name: "Flores - Luiza Sonza ft. Vitão",
+    youtubeLink: "https://www.youtube.com/watch?v=meL5o_pmU_w",
+    score: -4,
+  };
+  return song;
 }

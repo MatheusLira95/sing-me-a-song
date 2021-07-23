@@ -7,10 +7,12 @@ import {
   createEmptyNameSong,
   createEmptyYoutubeLink,
   createSong,
+} from "../factories/songFactory";
+import {
+  clearDatabase,
   getSongById,
   scoreMinusFive,
-} from "../factories/songFactory";
-import { clearDatabase } from "../utils/databaseUtils";
+} from "../utils/databaseUtils";
 import connection from "../../src/database";
 
 beforeEach(async () => {
@@ -130,5 +132,26 @@ describe("POST /recommendations/:id/downvote", () => {
     const isDeleted = await getSongById(newSong.id);
 
     expect(isDeleted).toEqual(undefined);
+  });
+});
+
+describe("GET /recommendations/random", () => {
+  it("should return 404 if there is no musics registered", async () => {
+    const response = await supertest(app).get("/recommendations/random");
+    expect(response.status).toEqual(404);
+  });
+  it("should return 200 if there is a song registered and right response format", async () => {
+    const song = await createSong();
+    const response = await supertest(app).post("/recommendations").send(song);
+    const expected = {
+      id: 1,
+      name: song.name,
+      youtubeLink: song.youtubeLink,
+      score: song.score,
+    };
+
+    const result = await supertest(app).get("/recommendations/random");
+    expect(result.status).toEqual(200);
+    expect(expected).toEqual(result.body);
   });
 });

@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { validateYouTubeUrl } from "../services/songServices";
+import { getSong, validateYouTubeUrl } from "../services/songServices";
 import * as songRepository from "../repositories/songRepository";
 import connection from "../database";
 
@@ -56,6 +56,23 @@ export async function downVote(req: Request, res: Response) {
     }
 
     res.sendStatus(200);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+}
+
+export async function getRecommendation(req: Request, res: Response) {
+  try {
+    const ramdom = Math.random();
+
+    const result = await getSong(ramdom);
+
+    if (result === undefined) {
+      return res.sendStatus(404);
+    } else {
+      res.status(200).send(result);
+    }
   } catch (err) {
     console.log(err);
     res.sendStatus(500);
