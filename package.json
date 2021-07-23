@@ -17,6 +17,7 @@
     "@types/cors": "^2.8.12",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.13",
+    "@types/faker": "^5.5.7",
     "@types/jest": "^26.0.24",
     "@types/node": "^16.3.3",
     "@types/pg": "^8.6.1",
@@ -32,6 +33,8 @@
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "pg": "^8.6.0"
+    "faker": "^5.5.3",
+    "pg": "^8.6.0",
+    "youtube-validate": "^1.2.4"
   }
 }
